@@ -1,10 +1,11 @@
 const algorithmia = require('algorithmia')
 const apikey = require('../../src/api/keys.json').apiKey
+const sentenceBoundaryDeteciton = require('sbd')
 
 async function robotText(content){
     await fetchContentFromWikipedia(content)
     await sanitizeContent(content)
-    //breakContentIntoSentences(content)
+    breakContentIntoSentences(content)
 
     async function fetchContentFromWikipedia(content){
         try {
@@ -24,7 +25,8 @@ async function robotText(content){
     async function sanitizeContent(content){
         const withoutBlankLinesAndMarkDown = removeBlankLinesAndMarkDown(content.sourceContentOriginal)
         const withoutDateInParentheses = removeDatesInParentheses(withoutBlankLinesAndMarkDown)
-        console.log(withoutDateInParentheses)
+       
+        content.sourceContentOriginaSanitized = withoutDateInParentheses
 
         function removeBlankLinesAndMarkDown(text){
             const allLines = text.split('\n')
@@ -55,6 +57,21 @@ async function robotText(content){
         function removeDatesInParentheses(text){
             return text.replace(/\((?:\([^()]*\)|[^()])*\)/gm, '').replace(/  /g,' ')
         }
+    }
+
+    function breakContentIntoSentences(content){
+        const sentences = sentenceBoundaryDeteciton.sentences(content.sourceContentOriginaSanitized)
+        
+        content.sentences = []
+
+        sentences.forEach(sentence => {
+            content.sentences.push({
+                text: sentence,
+                keywords: [],
+                images: [],
+            })
+        })
+
     }
 
 }
