@@ -1,12 +1,13 @@
 const apikey = require('../../src/api/keys.json').apiKey
 const watsonApiKey = require('../../src/api/keys_watson.json').apikey
+const state = require('../save-robot/save-robot')
 
 const algorithmia = require('algorithmia')
 const sentenceBoundaryDeteciton = require('sbd')
 
 const NaturalLanguageUnderstadingV1 = require('watson-developer-cloud/natural-language-understanding/v1')
 
-var nlu = new NaturalLanguageUnderstadingV1({
+const nlu = new NaturalLanguageUnderstadingV1({
     iam_apikey: watsonApiKey,
     version: '2018-04-05',
     url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/',
@@ -26,12 +27,16 @@ var nlu = new NaturalLanguageUnderstadingV1({
 //    process.exit(0)
 //})
 
-async function robotText(content){
+async function robotText(){
+    const content = state.load()
+
     await fetchContentFromWikipedia(content)
-    await sanitizeContent(content)
+    sanitizeContent(content)
     breakContentIntoSentences(content)
     limitMaximumSentences(content)
     await fetchKeywordsOfAllSentences(content)
+
+    state.save(content)
 
     async function fetchContentFromWikipedia(content){
         try {
