@@ -10,8 +10,8 @@ async function start() {
     //await robots.robotText()
     await robots.robotImage()
 
-    const content = robots.robotSave.load()
-    console.dir(content, { depth: null })
+    //const content = robots.robotSave.load()
+    //console.dir(content, { depth: null })
 
 }
 
