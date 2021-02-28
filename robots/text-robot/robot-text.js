@@ -1,5 +1,5 @@
-const apikey = require('../../src/api/keys.json').apiKey
-const watsonApiKey = require('../../src/api/keys_watson.json').apikey
+const apikey = require('../../src/credentials/keys.json').apiKey
+const watsonApiKey = require('../../src/credentials/keys_watson.json').apikey
 const state = require('../save-robot/save-robot')
 
 const algorithmia = require('algorithmia')
