@@ -1,11 +1,18 @@
 const readLine = require('readline-sync')
+const robots = {
+    robotText: require('./robots/text-robot/index'),
+}
 
-function start() {
+async function start() {
 
-    const content = {}
+    const content = {} 
 
-    content.searchTerm = askAndReturnSearchTerm()
+    content.searchTerm = askAndReturnSearchTerm().replace(/\s/g, '')
+    console.log(content.searchTerm)
+
     content.prefix = askAndReturnPrefix()
+
+    await robots.robotText(content)
 
     function askAndReturnSearchTerm() {
         return readLine.question('Type a term to search on wikipedia: ')
